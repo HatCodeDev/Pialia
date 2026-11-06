@@ -4,23 +4,27 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-brand-500 selection:text-white;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-slate-900 text-slate-800 antialiased selection:bg-bio-500 selection:text-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
   }
 }
 
-/* Glassmorphism utilities */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Custom fine border utilities */
+.border-fine {
+  border-color: rgba(226, 232, 240, 0.8);
 }
 
-.glass-panel-glow {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.15);
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scanner target box animation */
+@keyframes scan-line {
+  0% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(220px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.8; }
+}
+
+.animate-scan-line {
+  animation: scan-line 2.5s ease-in-out infinite;
 }
