@@ -17,15 +17,19 @@ import {
   Package,
   Award,
   CircleDot,
-  Info
+  Info,
+  HelpCircle,
+  Sparkles
 } from 'lucide-react';
 import { ScannerModal } from './components/ScannerModal';
+import { PointsGuideModal } from './components/PointsGuideModal';
 import type { DepositResult, Reward, Quest, LeaderboardUser, EntityLeaderboard } from './types';
 
 export function App() {
   // Navigation states
   const [activeTab, setActiveTab] = useState<'home' | 'leaderboard' | 'rewards'>('home');
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   
   // Interactive user state for pitch: realistic student units
   const [userPoints, setUserPoints] = useState(140);
@@ -191,24 +195,39 @@ export function App() {
 
                 {/* Métricas Primarias: Envases & Puntos */}
                 <div className="grid grid-cols-2 gap-4 pb-4">
-                  <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
-                    <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">Saldo Canjeable</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">
-                        {userPoints}
-                      </span>
-                      <span className="text-xs text-emerald-700 font-bold">pts</span>
+                  <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-[11px] font-semibold text-slate-500">Saldo Canjeable</span>
+                        <button
+                          onClick={() => setIsGuideOpen(true)}
+                          title="¿Cómo ganar puntos?"
+                          aria-label="Ver equivalencias de puntos"
+                          className="text-[10px] text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-0.5 transition-colors"
+                        >
+                          <HelpCircle className="w-3 h-3" />
+                          <span>Guía</span>
+                        </button>
+                      </div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">
+                          {userPoints}
+                        </span>
+                        <span className="text-xs text-emerald-700 font-bold">pts</span>
+                      </div>
                     </div>
                     <span className="text-[10px] text-slate-400 mt-1 block">Listo para cafetería</span>
                   </div>
 
-                  <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
-                    <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">Envases Aportados</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold text-emerald-800 tracking-tight tabular-nums">
-                        {bottlesDeposited + capsDeposited}
-                      </span>
-                      <span className="text-xs text-slate-500 font-semibold">uds</span>
+                  <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100 flex flex-col justify-between">
+                    <div>
+                      <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">Envases Aportados</span>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-3xl font-extrabold text-emerald-800 tracking-tight tabular-nums">
+                          {bottlesDeposited + capsDeposited}
+                        </span>
+                        <span className="text-xs text-slate-500 font-semibold">uds</span>
+                      </div>
                     </div>
                     <span className="text-[10px] text-slate-500 mt-1 block">
                       {bottlesDeposited} botellas • {capsDeposited} tapitas
@@ -283,6 +302,32 @@ export function App() {
                   <span className="font-semibold text-emerald-700">Meta Comunitaria</span>
                 </div>
               </div>
+
+              {/* Banner / Acceso a Guía de Puntos */}
+              <button
+                onClick={() => setIsGuideOpen(true)}
+                className="w-full p-3.5 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 hover:from-emerald-100/70 hover:to-teal-100/70 rounded-2xl border border-emerald-200/80 text-left transition-all shadow-2xs flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                      <span>¿Cómo ganar puntos?</span>
+                      <span className="text-[10px] bg-emerald-700 text-white px-1.5 py-0.2 rounded font-bold">
+                        3 botellas = 1 café
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 mt-0.5">
+                      Revisa equivalencias reales, bonos de racha y retos de campus
+                    </p>
+                  </div>
+                </div>
+                <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-emerald-800 shadow-2xs group-hover:translate-x-0.5 transition-transform">
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+              </button>
 
               {/* Acceso Rápido */}
               <div className="grid grid-cols-2 gap-3">
@@ -446,6 +491,27 @@ export function App() {
                 </div>
               </div>
 
+              {/* Botón "¿Cómo ganar puntos?" en Recompensas */}
+              <button
+                onClick={() => setIsGuideOpen(true)}
+                className="w-full p-3 bg-emerald-50 hover:bg-emerald-100/70 border border-emerald-200/80 rounded-2xl flex items-center justify-between transition-colors text-left group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                    <HelpCircle className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 block leading-tight">
+                      ¿Cómo ganar más puntos?
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      Conoce las equivalencias y metas para desbloquear premios
+                    </span>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-emerald-700 group-hover:translate-x-0.5 transition-transform shrink-0" />
+              </button>
+
               <div className="space-y-3">
                 {rewards.map((reward) => (
                   <div
@@ -544,6 +610,13 @@ export function App() {
           isOpen={isScannerOpen}
           onClose={() => setIsScannerOpen(false)}
           onSuccess={handleDepositSuccess}
+        />
+
+        {/* Modal de Guía de Puntos y Equivalencias */}
+        <PointsGuideModal
+          isOpen={isGuideOpen}
+          onClose={() => setIsGuideOpen(false)}
+          onOpenScanner={() => setIsScannerOpen(true)}
         />
 
         {/* Barra de Navegación Inferior */}
