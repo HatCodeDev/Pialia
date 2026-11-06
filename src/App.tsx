@@ -12,17 +12,20 @@ import {
   Check, 
   Building2, 
   QrCode,
-  MapPin
+  MapPin,
+  Coffee,
+  Package,
+  Award
 } from 'lucide-react';
 import { ScannerModal } from './components/ScannerModal';
 import type { DepositResult, Reward, Quest, LeaderboardUser } from './types';
 
 export function App() {
-  // Estados de navegación
+  // Navigation states
   const [activeTab, setActiveTab] = useState<'home' | 'leaderboard' | 'rewards'>('home');
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   
-  // Estado del usuario en la demo (reactivo para el pitch)
+  // Interactive user state for pitch
   const [userPoints, setUserPoints] = useState(450);
   const [recycledGrams, setRecycledGrams] = useState(3840);
   const [co2SavedGrams, setCo2SavedGrams] = useState(5760);
@@ -30,7 +33,7 @@ export function App() {
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
   const [claimedSuccess, setClaimedSuccess] = useState(false);
 
-  // Muestra de Leaderboard
+  // Leaderboard filter
   const [leaderboardFilter, setLeaderboardFilter] = useState<'individual' | 'entity'>('individual');
 
   const individualLeaderboard: LeaderboardUser[] = [
@@ -61,35 +64,48 @@ export function App() {
   const rewards: Reward[] = [
     {
       id: 'r1',
-      title: 'Café de Especialidad Gratis',
+      title: 'Café de Especialidad',
       category: 'Cafetería',
       pointsCost: 150,
       description: 'Válido para 1 café americano o capuchino en cafeterías aliadas del campus.',
       partner: 'Cafetería Central',
-      icon: '☕',
+      icon: 'coffee',
       available: true,
     },
     {
       id: 'r2',
-      title: 'Termo Bio Reutilizable Acero',
+      title: 'Termo Reutilizable de Acero',
       category: 'Campus',
       pointsCost: 400,
-      description: 'Termo térmico oficial de 600ml de grado alimentario, libre de BPA.',
+      description: 'Termo térmico de 600ml de grado alimentario, libre de BPA.',
       partner: 'Tienda Institucional',
-      icon: '🌿',
+      icon: 'package',
       available: true,
     },
     {
       id: 'r3',
-      title: 'Acreditación de Servicio / Taller',
+      title: 'Acreditación de Servicio y RSU',
       category: 'Académico',
       pointsCost: 650,
       description: 'Constancia de 10 horas de Responsabilidad Social y Compromiso Ecológico.',
       partner: 'Dirección de RSU',
-      icon: '📜',
+      icon: 'award',
       available: true,
     },
   ];
+
+  const renderRewardIcon = (icon: string) => {
+    switch (icon) {
+      case 'coffee':
+        return <Coffee className="w-5 h-5 text-slate-700" />;
+      case 'package':
+        return <Package className="w-5 h-5 text-slate-700" />;
+      case 'award':
+        return <Award className="w-5 h-5 text-slate-700" />;
+      default:
+        return <Gift className="w-5 h-5 text-slate-700" />;
+    }
+  };
 
   const handleDepositSuccess = (result: DepositResult) => {
     setUserPoints(prev => prev + result.pointsEarned);
@@ -110,10 +126,10 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-slate-900 flex justify-center py-0 sm:py-8 font-sans selection:bg-bio-500 selection:text-white">
-      {/* Shell Contenedor Móvil de Alta Fidelidad */}
+      {/* Mobile Shell */}
       <main className="w-full max-w-[420px] bg-slate-50 min-h-screen sm:min-h-[860px] sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden border border-slate-200/80 relative">
         
-        {/* Barra Superior de Estado / Identidad */}
+        {/* Top Header */}
         <header className="px-5 pt-6 pb-4 bg-white border-b border-slate-100 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-bio-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
@@ -141,13 +157,13 @@ export function App() {
           </div>
         </header>
 
-        {/* Contenido Principal con Scroll Interno */}
+        {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-5 py-5 pb-24 space-y-5">
           
           {/* TAB: HOME */}
           {activeTab === 'home' && (
             <>
-              {/* Tarjeta de Impacto Auditado (Fintech / Precision Style) */}
+              {/* Verified Impact Card */}
               <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-card">
                 <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-3">
                   <span className="flex items-center gap-1.5">
@@ -184,7 +200,7 @@ export function App() {
                 </div>
               </div>
 
-              {/* Botón de Acción Hero: Escanear / Depositar */}
+              {/* Action Button: Scan */}
               <button
                 onClick={() => setIsScannerOpen(true)}
                 className="w-full py-4 px-5 bg-bio-600 hover:bg-bio-700 active:scale-[0.99] text-white rounded-2xl shadow-lg shadow-bio-600/20 font-bold text-sm transition-all flex items-center justify-between group"
@@ -203,7 +219,7 @@ export function App() {
                 </div>
               </button>
 
-              {/* Reto Colectivo de la Comunidad */}
+              {/* Collective Quest */}
               <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -235,7 +251,7 @@ export function App() {
                 </div>
               </div>
 
-              {/* Atajos Rápidos */}
+              {/* Quick Shortcuts */}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setActiveTab('leaderboard')}
@@ -270,7 +286,7 @@ export function App() {
                 <p className="text-xs text-slate-500 mt-0.5">Competencia transparente por impacto ecológico real</p>
               </div>
 
-              {/* Selector de Filtro */}
+              {/* Filter Selector */}
               <div className="flex bg-slate-200/70 p-1 rounded-xl text-xs font-semibold">
                 <button
                   onClick={() => setLeaderboardFilter('individual')}
@@ -384,8 +400,8 @@ export function App() {
                     className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="text-2xl p-2 rounded-xl bg-slate-50 border border-slate-100">
-                        {reward.icon}
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center">
+                        {renderRewardIcon(reward.icon)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -423,7 +439,7 @@ export function App() {
 
         </div>
 
-        {/* Modal de Canje de Recompensa con Código QR para la Demo */}
+        {/* Modal Redeem Coupon */}
         {selectedReward && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
             <div className="w-full max-w-sm bg-white rounded-3xl p-6 text-center shadow-2xl border border-slate-100">
@@ -432,14 +448,16 @@ export function App() {
                   <div className="w-12 h-12 bg-bio-100 text-bio-600 rounded-full flex items-center justify-center mx-auto">
                     <Check className="w-6 h-6" />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900">¡Cupón Canjeado con Éxito!</h3>
+                  <h3 className="text-base font-bold text-slate-900">Cupón Canjeado con Éxito</h3>
                   <p className="text-xs text-slate-500">
                     Se han descontado {selectedReward.pointsCost} puntos de tu saldo.
                   </p>
                 </div>
               ) : (
                 <>
-                  <div className="text-3xl mb-2">{selectedReward.icon}</div>
+                  <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    {renderRewardIcon(selectedReward.icon)}
+                  </div>
                   <h3 className="text-sm font-bold text-slate-900">{selectedReward.title}</h3>
                   <p className="text-xs text-slate-500 mt-1">{selectedReward.partner}</p>
 
@@ -468,14 +486,14 @@ export function App() {
           </div>
         )}
 
-        {/* Modal de Escáner IA (Simulador) */}
+        {/* Modal Scanner IA Simulator */}
         <ScannerModal
           isOpen={isScannerOpen}
           onClose={() => setIsScannerOpen(false)}
           onSuccess={handleDepositSuccess}
         />
 
-        {/* Barra de Navegación Inferior (PWA TabBar) */}
+        {/* Bottom TabBar */}
         <nav className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-6 py-2.5 flex items-center justify-around z-10">
           <button
             onClick={() => setActiveTab('home')}
